@@ -35,5 +35,17 @@ pipeline {
                     -Dsonar.login=${SONAR_TOKEN}'
             }
         }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        def customImage = docker.build("yanasheva/petclinic:${env.BUILD_ID}")
+                        customImage.push()
+                        customImage.push('latest')
+                    }
+                }
+            }
+        }
     }
 }
