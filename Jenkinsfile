@@ -52,7 +52,7 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@13.218.107.255 "
+                        ssh -o StrictHostKeyChecking=no ubuntu@34.228.169.204 "
                             docker pull yanasheva/petclinic:latest &&
                             docker stop petclinic || true &&
                             docker rm petclinic || true &&
