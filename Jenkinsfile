@@ -48,9 +48,18 @@ pipeline {
             }
         }
         
-        stage('Deploy') {
+        stage('Deploy to AWS EC2') {
             steps {
-                sh 'ansible-playbook -i ./inventory deploy.yml'
+                sshagent(['ec2-ssh-key']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@13.218.107.255 "
+                            docker pull yanasheva/petclinic:latest &&
+                            docker stop petclinic || true &&
+                            docker rm petclinic || true &&
+                            docker run -d --name petclinic -p 8080:8080 yanasheva/petclinic:latest
+                        "
+                    '''
+                }
             }
         }
     }
