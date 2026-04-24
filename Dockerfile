@@ -3,7 +3,7 @@ COPY . /app
 WORKDIR /app
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-jammy
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8082
 ENTRYPOINT ["java", "-jar", "/app.jar"]
