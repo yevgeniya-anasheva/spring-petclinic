@@ -30,6 +30,12 @@
         dest: /home/ubuntu/app/prometheus.yml
         mode: '0644'
 
+    - name: Stop existing containers
+      shell: docker compose down
+      args:
+        chdir: /home/ubuntu/app
+      ignore_errors: yes
+
     - name: Pull latest petclinic image
       shell: docker pull yanasheva/petclinic:latest
 
