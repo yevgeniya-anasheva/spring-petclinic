@@ -52,12 +52,15 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@34.228.169.204 "
-                            docker pull yanasheva/petclinic:latest &&
-                            docker stop petclinic || true &&
-                            docker rm petclinic || true &&
-                            docker run -d --name petclinic -p 8080:8080 yanasheva/petclinic:latest
-                        "
+                        # Copy files to EC2
+                        scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@3.93.60.251:/home/ubuntu/app/
+                        scp -o StrictHostKeyChecking=no prometheus.yml ubuntu@3.93.60.251:/home/ubuntu/app/
+                        
+                        # Run Ansible playbook
+                        ansible-playbook -i 3.93.60.251, \
+                          --private-key $SSH_AUTH_SOCK \
+                          -u ubuntu \
+                          deploy.yml
                     '''
                 }
             }
