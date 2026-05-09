@@ -2,12 +2,38 @@
   become: yes
   tasks:
     - name: Ensure Docker is installed
-      apt: name=docker.io state=present update_cache=yes
-    - name: Pull latest image
-      docker_container:
-        name: petclinic
-        image: yanasheva/petclinic:latest
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker Compose is installed
+      apt:
+        name: docker-compose-v2
+        state: present
+
+    - name: Ensure Docker is started
+      service:
+        name: docker
         state: started
-        restart: yes
-        ports:
-          - "8082:8082"
+        enabled: yes
+
+    - name: Copy docker-compose.yml to EC2
+      copy:
+        src: ./docker-compose.yml
+        dest: /home/ubuntu/app/docker-compose.yml
+        mode: '0644'
+
+    - name: Copy prometheus.yml to EC2
+      copy:
+        src: ./prometheus.yml
+        dest: /home/ubuntu/app/prometheus.yml
+        mode: '0644'
+
+    - name: Pull latest petclinic image
+      shell: docker pull yanasheva/petclinic:latest
+
+    - name: Run docker compose
+      shell: docker compose up -d
+      args:
+        chdir: /home/ubuntu/app
