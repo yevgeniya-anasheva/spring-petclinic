@@ -3,7 +3,7 @@ services:
     image: yanasheva/petclinic:latest
     container_name: petclinic
     ports:
-      - "8080:8080"
+      - "8082:8082"
     depends_on:
       - mysql
 
