@@ -4,5 +4,5 @@ global:
 scrape_configs:
   - job_name: 'petclinic'
     static_configs:
-      - targets: ['petclinic:8080']
+      - targets: ['petclinic:8082']
     metrics_path: '/actuator/prometheus'
