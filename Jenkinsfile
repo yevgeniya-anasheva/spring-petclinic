@@ -52,6 +52,8 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key']) {
                     sh '''
+                        # Create the directory on EC2 first
+                        ssh -o StrictHostKeyChecking=no ubuntu@3.93.60.251 "mkdir -p /home/ubuntu/app"
                         # Copy files to EC2
                         scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@3.93.60.251:/home/ubuntu/app/
                         scp -o StrictHostKeyChecking=no prometheus.yml ubuntu@3.93.60.251:/home/ubuntu/app/
