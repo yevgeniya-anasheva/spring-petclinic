@@ -30,6 +30,11 @@
         dest: /home/ubuntu/app/prometheus.yml
         mode: '0644'
 
+    - name: Force remove any stray containers
+      shell: docker rm -f prometheus grafana mysql petclinic || true
+      args:
+        chdir: /home/ubuntu/app
+
     - name: Stop existing containers
       shell: docker compose down
       args:
