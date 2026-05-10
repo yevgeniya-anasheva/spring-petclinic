@@ -68,4 +68,24 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            withCredentials([string(credentialsId: 'slack-webhook', variable: 'SLACK_URL')]) {
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \
+                    --data '{"text":"✅ Build #${BUILD_NUMBER}: Passed - ${JOB_NAME}"}' \
+                    $SLACK_URL
+                """
+            }
+        }
+        failure {
+            withCredentials([string(credentialsId: 'slack-webhook', variable: 'SLACK_URL')]) {
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \
+                    --data '{"text":"❌ Build #${BUILD_NUMBER}: Failed - ${JOB_NAME}"}' \
+                    $SLACK_URL
+                """
+            }
+        }
+    }
 }
